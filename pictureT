@@ -1,0 +1,31 @@
+import os
+import shutil
+
+def extract_jpg_files():
+    current_directory = os.getcwd()
+
+    for root, dirs, files in os.walk(current_directory):
+        for file in files:
+            if file.lower().endswith(".jpg"):  # 检查文件后缀是否为 .jpg
+                file_path = os.path.join(root, file)
+                dest_path = os.path.join(current_directory, file)
+
+                # 检查目标文件是否存在并重命名
+                count = 1
+                while os.path.exists(dest_path):
+                    file_name, file_extension = os.path.splitext(file)
+                    dest_path = os.path.join(current_directory, f"{file_name}_{count}{file_extension}")
+                    count += 1
+
+                shutil.move(file_path, dest_path)
+
+        # 移除空文件夹
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            try:
+                os.rmdir(dir_path)
+            except OSError:
+                pass  # 忽略如果文件夹不为空的情况
+
+if __name__ == "__main__":
+    extract_jpg_files()
